@@ -54,7 +54,7 @@ for (let index = 0; index < slider.length; index++) {
 
       /*==== list of types ================================================================*/
 
-      if (Type == 'line') {
+      /*if (Type == 'line') {
          line(index, SliderDisplay, sliderWidth, GapSlides, numberOfSlides);
       }
       function line(index, SliderDisplay, sliderWidth, GapSlides, numberOfSlides) {
@@ -125,7 +125,7 @@ for (let index = 0; index < slider.length; index++) {
          });
       }
 
-
+      */
 
       /*------------------------------------------------------------------------*/
 
