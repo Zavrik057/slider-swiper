@@ -1,6 +1,8 @@
 
 let slider = document.querySelectorAll('.slider');
 
+let indexCommit = 1;
+
 for (let index = 0; index < slider.length; index++) {
    if (slider[index].dataset.Gap == '' || slider[index].dataset.Type == '' || slider[index].dataset.Slides == '') {
       slider[index].classList.add('_remove');
