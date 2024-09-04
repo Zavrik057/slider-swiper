@@ -1,8 +1,6 @@
 
 let slider = document.querySelectorAll('.slider');
 
-let indexCommit = 1;
-
 for (let index = 0; index < slider.length; index++) {
    if (slider[index].dataset.Gap == '' || slider[index].dataset.Type == '' || slider[index].dataset.Slides == '') {
       slider[index].classList.add('_remove');
@@ -55,14 +53,15 @@ for (let index = 0; index < slider.length; index++) {
       let numberOfSlides = Math.ceil(sliderItems.length / Slides);
 
       /*==== list of types ================================================================*/
-
       if (Type == 'line') {
-         line(index, SliderDisplay, sliderWidth, GapSlides, numberOfSlides);
+         line(index, numberOfSlides, currentItem);
       }
-      function line(index, SliderDisplay, sliderWidth, GapSlides, numberOfSlides) {
-         let currentItem = 0;
+ 
+      /*====== functions ==================================================================*/
+       
+      function line(index, numberOfSlides, currentItem) {
 
-         let line = document.createElement('div');
+         var line = document.createElement('div');
          line.classList.add('line');
 
          slider[index].append(line);
@@ -72,7 +71,7 @@ for (let index = 0; index < slider.length; index++) {
 
          line.append(lineDisplay);
 
-         let lineIndex = document.createElement('div');
+         var lineIndex = document.createElement('div');
          lineIndex.classList.add('line__index');
 
          lineDisplay.append(lineIndex);
@@ -111,27 +110,21 @@ for (let index = 0; index < slider.length; index++) {
             lineIndex.style[css] = lineIndexStyles[css];
          }
 
-         let lineDisplayWidth = lineDisplay.clientWidth;
-         let lineIndexWidth = lineDisplayWidth / numberOfSlides;
+         var lineDisplayWidth = lineDisplay.clientWidth;
+         var lineIndexWidth =  lineDisplayWidth / numberOfSlides;
+         line.dataset.Status = true;
 
          lineIndex.style['width'] = lineIndexWidth + 'px';
-
-         SliderDisplay.addEventListener('scroll', (event) => {
-
-            if (SliderDisplay.scrollLeft - sliderWidth - (+GapSlides) > currentItem) {
-               currentItem = Math.round(SliderDisplay.scrollLeft / sliderWidth);
-            } else if (SliderDisplay.scrollLeft - sliderWidth - (+GapSlides) < currentItem) {
-               currentItem = Math.round(SliderDisplay.scrollLeft / sliderWidth);
-            }
-            lineIndex.style['left'] = (currentItem * lineIndexWidth) + 'px';
-         });
+         lineIndex.style['left'] = (currentItem * lineIndexWidth) + 'px';
       }
-
-
-
-      /*------------------------------------------------------------------------*/
-
-      /*------------------------------------------------------------------------*/
+      function getLine(currentItem, index, numberOfSlides){
+         let lineIndex = slider[index].querySelector('.line__index');
+         let lineDisplay = slider[index].querySelector('.line__display');
+         let lineDisplayWidth = lineDisplay.clientWidth;
+         let lineIndexWidth = lineDisplayWidth / numberOfSlides;
+         lineIndex.style['left'] = (currentItem * lineIndexWidth) + 'px';
+      }
+      function dots(){}
 
       /*==== buttons arrow ===================================================================*/
 
@@ -316,6 +309,7 @@ for (let index = 0; index < slider.length; index++) {
             }
          }
          getDots(dots, currentItem);
+         getLine(currentItem, index, numberOfSlides);
       });
 
       for (let index = 0; index < dots.length; index++) {
