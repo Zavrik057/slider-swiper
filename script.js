@@ -51,7 +51,7 @@ for (let index = 0; index < slider.length; index++) {
 
       /*====== functions ==================================================================*/
 
-      function line(index, numberOfSlides, currentItem) {
+      function line(index, numberOfSlides, currentItem, SliderDisplay, sliderWidth, GapSlides) {
 
          var line = document.createElement('div');
          line.classList.add('line');
@@ -81,7 +81,7 @@ for (let index = 0; index < slider.length; index++) {
 
          let lineDisplayStyles = {
             'width': '60%',
-            'height': '4px',
+            'height': '6px',
             'border-radius': '60px',
             'background': 'white',
             'position': 'relative',
@@ -107,6 +107,21 @@ for (let index = 0; index < slider.length; index++) {
          line.dataset.Status = true;
 
          lineIndex.style['width'] = lineIndexWidth + 'px';
+
+         line.addEventListener("click", (event) => {
+            let target = event.target.closest('.line__display');
+            let targetIndex = Math.floor(event.layerX / lineIndexWidth);
+
+            if (event.target.closest('.line__index')) { } else if (target) {
+               if (targetIndex > currentItem) {
+                  SliderDisplay.scrollBy(((sliderWidth + (+GapSlides)) * (targetIndex - currentItem)), 0);
+               } else if (targetIndex < currentItem) {
+                  SliderDisplay.scrollBy((-sliderWidth - (+GapSlides)) * (currentItem - targetIndex), 0);
+               }
+               currentItem = targetIndex;
+            };
+         });
+
          lineIndex.style['left'] = (currentItem * lineIndexWidth) + 'px';
       }
 
@@ -158,14 +173,15 @@ for (let index = 0; index < slider.length; index++) {
          dotsDisplay.addEventListener("click", (event) => {
 
             let target = event.target.closest('.dot');
-            let targetIndex = target.dataset.Number;
-            if (target) {
+            let targetIndex = currentItem;
+            if (event.target.closest('.dot')) {
+               targetIndex = target.dataset.Number;
                if (targetIndex >= currentItem) {
                   SliderDisplay.scrollBy(((sliderWidth + (+GapSlides)) * (targetIndex - currentItem)), 0);
                } else if (targetIndex < currentItem) {
                   SliderDisplay.scrollBy((-sliderWidth - (+GapSlides)) * (currentItem - targetIndex), 0);
                }
-            } else if (!target) { };
+            };
             currentItem = targetIndex;
             getDots(index, currentItem, slider);
          });
@@ -186,7 +202,7 @@ for (let index = 0; index < slider.length; index++) {
       /*==== list of types ================================================================*/
 
       if (Type == 'line') {
-         line(index, numberOfSlides, currentItem);
+         line(index, numberOfSlides, currentItem, SliderDisplay, sliderWidth, GapSlides);
       } else if (Type == 'dots') {
          dots(index, currentItem, numberOfSlides, SliderDisplay, sliderWidth, GapSlides);
          getDots(index, currentItem, slider);
@@ -289,29 +305,11 @@ for (let index = 0; index < slider.length; index++) {
 
          if (Type == 'line') {
             getLine(currentItem, index, numberOfSlides);
-         } else if (Type == 'dots') {
+         }
+         if (Type == 'dots') {
             getDots(index, currentItem, slider);
          }
       });
-
-
-      /*window.addEventListener('keyup', (event) => {
-         if (event.code === 'Space') {
-            SliderDisplay.scrollBy((sliderWidth + (+GapSlides)), 0);
-            if (currentItem != (Math.ceil(sliderItems.length / Slides) - 1)) {
-               currentItem++;
-            } else {
-            }
-         }
-         if (event.code === 'Backspace') {
-            SliderDisplay.scrollBy(-sliderWidth - GapSlides, 0);
-            if (currentItem != 0) {
-               currentItem--;
-            } else {
-            }
-         }
-         getDots(dots, currentItem);
-      }); */
 
       slider[index].addEventListener("click", (event) => {
          let target = event.target.closest('.button');
@@ -338,20 +336,6 @@ for (let index = 0; index < slider.length; index++) {
          }
 
       });
-      //let currentItemAux = 0;
-      /*SliderDisplay.addEventListener("scroll", (event) => {
-         if (SliderDisplay.scrollLeft / sliderWidth > 0) {
-            currentItemAux = Math.floor(SliderDisplay.scrollLeft / sliderWidth);
-         } else if (SliderDisplay.scrollLeft / sliderWidth == 0) {
-            currentItemAux = 0;
-         }
-      
-         let leftScroll = SliderDisplay.scrollLeft;
-         if(leftScroll / sliderWidth > 1.5){
-            SliderDisplay.scrollBy(+SliderDisplay - (+leftScroll), 0);
-         }
-      });*/
-      /*------------------------------------------------------------------------*/
 
       slider[index].addEventListener("mouseover", (event) => {
          let target = event.target.closest('.button');
@@ -363,45 +347,5 @@ for (let index = 0; index < slider.length; index++) {
          if (!target) return;
          target.style['background'] = 'darkgray';
       });
-      /*========================================================================*/
-
-      /*function dots(numb, slider, currentItem) {
-   
-         let dotsDisplayStyles = {
-            'width': '100%',
-            'display': 'flex',
-            'align-items': 'center',
-            'justify-content': 'center',
-            'gap': '5px',
-         }
-         let dotsStyles = {
-            'width': '10px',
-            'height': '10px',
-            'border-radius': '50%',
-            'background': 'black',
-         }
-         let dotsDisplay = document.createElement('div');
-         dotsDisplay.classList.add('dots__display');
-   
-   
-         for (css in dotsDisplayStyles) {
-            dotsDisplay.style[css] = dotsDisplayStyles[css];
-         }
-         for (let index = 0; index < numb; index++) {
-            let dot = document.createElement('div');
-            dot.classList.add('dot');
-            for (css in dotsStyles) {
-               dot.style[css] = dotsStyles[css];
-            }
-            dotsDisplay.append(dot);
-         }
-         slider.append(dotsDisplay);
-         let dots = dotsDisplay.children;
-         dots[currentItem].style['background'] = 'lightblue';
-      }*/
-      /*------------------------------------------------------------------------*/
    }
-
-
-
 }
