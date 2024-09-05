@@ -17,10 +17,38 @@ for (let index = 0; index < slider.length; index++) {
       let sliderItems = slider[index].getElementsByClassName('slider__item');
       let slidetItemsWidth = (sliderWidth - (Slides - 1) * GapSlides) / Slides;
 
+      let itemHeight = 0;
+
       for (let index = 0; index < sliderItems.length; index++) {
          sliderItems[index].style['min-width'] = slidetItemsWidth + 'px';
+         sliderItems[index].style['min-height'] = '400px';
          sliderItems[index].style['margin-right'] = GapSlides + 'px';
+
+         if (sliderItems[index].clientHeight > itemHeight) {
+            itemHeight = sliderItems[index].clientHeight;
+         }
       }
+
+      /*------------------------------------------------------------------------*/
+
+      let SliderDisplaySyles = {
+         'width': '100%',
+         'display': 'grid',
+         'grid-template-columns': `repeat(${sliderItems.length}, 1fr)`,
+         'grid-template-rows': '1fr',
+         'overflow': 'scroll',
+         'scroll-behavior': 'smooth',
+         'min-height': '400px',
+         'padding-top': '40px',
+         'padding-bottom': '40px',
+      }
+
+      for(css in SliderDisplaySyles){
+         SliderDisplay.style[css] = SliderDisplaySyles[css];
+      }
+
+      /*------------------------------------------------------------------------*/
+
 
       sliderItems[sliderItems.length - 1].style['margin-right'] = (GapSlides / 2) + 'px';
 
