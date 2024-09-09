@@ -43,7 +43,7 @@ for (let index = 0; index < slider.length; index++) {
          'padding-bottom': '40px',
       }
 
-      for(css in SliderDisplaySyles){
+      for (css in SliderDisplaySyles) {
          SliderDisplay.style[css] = SliderDisplaySyles[css];
       }
 
@@ -197,21 +197,23 @@ for (let index = 0; index < slider.length; index++) {
          for (let index = 0; index < dotsItems.length; index++) {
             dotsItems[index].dataset.Number = index;
          }
+         /*------------------------------------------------------------------------*/
 
          dotsDisplay.addEventListener("click", (event) => {
 
             let target = event.target.closest('.dot');
-            let targetIndex = currentItem;
+            let targetIndex;
             if (event.target.closest('.dot')) {
                targetIndex = target.dataset.Number;
                if (targetIndex >= currentItem) {
-                  SliderDisplay.scrollBy(((sliderWidth + (+GapSlides)) * (targetIndex - currentItem)), 0);
+                  SliderDisplay.scrollBy(((sliderWidth + (+GapSlides)) * (targetIndex - currentItem)) + (SliderDisplay.scrollLeft - (sliderWidth + +GapSlides) * currentItem), 0);
                } else if (targetIndex < currentItem) {
-                  SliderDisplay.scrollBy((-sliderWidth - (+GapSlides)) * (currentItem - targetIndex), 0);
+                  SliderDisplay.scrollBy((-sliderWidth - (+GapSlides)) * (currentItem - targetIndex) - (SliderDisplay.scrollLeft - (sliderWidth + +GapSlides) * currentItem), 0);
                }
             };
             currentItem = targetIndex;
             getDots(index, currentItem, slider);
+            console.log('current item dots ' + currentItem);
          });
 
          return dotsItems;
@@ -226,6 +228,90 @@ for (let index = 0; index < slider.length; index++) {
             } else { }
          }
       }
+
+      /*====== events ===============================================================*/
+
+      let eventScroll;
+      let scrollDelay = 200;
+
+      SliderDisplay.addEventListener('scroll', (event) => {
+
+         if (SliderDisplay.scrollLeft - sliderWidth - (+GapSlides) > currentItem) {
+            currentItem = Math.round(SliderDisplay.scrollLeft / sliderWidth);
+         } else if (SliderDisplay.scrollLeft - sliderWidth - (+GapSlides) < currentItem) {
+            currentItem = Math.round(SliderDisplay.scrollLeft / sliderWidth);
+         }
+         /*clearTimeout(eventScroll);
+
+         eventScroll = setTimeout(() => {
+            let scrollGap = SliderDisplay.scrollLeft - (currentItem * (sliderWidth + +GapSlides));
+
+            console.log('scroll gap ' + scrollGap);
+            console.log('slider width ' + sliderWidth);
+            console.log('slider left ' + SliderDisplay.scrollLeft);
+
+            if (scrollGap != 0) {
+               if (scrollGap <= sliderWidth / 2) {
+                  //SliderDisplay.scrollBy(-scrollGap, 0);
+                  SliderDisplay.scrollBy(-scrollGap + (+GapSlides), 0);
+                  currentItem--;
+               } else if (scrollGap > sliderWidth / 2) {
+                  //SliderDisplay.scrollBy(scrollGap, 0);
+                  SliderDisplay.scrollBy(-scrollGap + (+GapSlides), 0);
+                  currentItem++;
+               }
+            }
+         }, scrollDelay);
+         console.log('current item scrol ' + currentItem);*/
+
+         if (Type == 'line') {
+            getLine(currentItem, index, numberOfSlides);
+         }
+         if (Type == 'dots') {
+            getDots(index, currentItem, slider);
+         }
+      });
+
+      /*------------------------------------------------------------------------*/
+       
+      slider[index].addEventListener("click", (event) => {
+         let target = event.target.closest('.button');
+         if (target) {
+            if (target.classList.contains('button--left')) {
+               SliderDisplay.scrollBy(-sliderWidth - GapSlides, 0);
+               if (currentItem != 0) {
+                  currentItem--;
+               } else {
+               }
+            }
+            if (target.classList.contains('button--right')) {
+               SliderDisplay.scrollBy((sliderWidth + (+GapSlides)), 0);
+               if (currentItem != (Math.ceil(sliderItems.length / Slides) - 1)) {
+                  currentItem++;
+               } else {
+               }
+            }
+         }
+         if (Type == 'line') {
+            getLine(currentItem, index, numberOfSlides);
+         } else if (Type == 'dots') {
+            getDots(index, currentItem, slider);
+         }
+
+      });
+
+      /*------------------------------------------------------------------------*/
+       
+      slider[index].addEventListener("mouseover", (event) => {
+         let target = event.target.closest('.button');
+         if (!target) return;
+         target.style['background-color'] = 'rgba(77, 77, 77, 0.785)';
+      });
+      slider[index].addEventListener("mouseout", (event) => {
+         let target = event.target.closest('.button');
+         if (!target) return;
+         target.style['background'] = 'darkgray';
+      });
 
       /*==== list of types ================================================================*/
 
@@ -321,59 +407,6 @@ for (let index = 0; index < slider.length; index++) {
       buttonDisplayLeft.prepend(buttonArrowLeft);
       buttonDisplayRight.prepend(buttonArrowRight);
 
-      /*====== events ===============================================================*/
 
-      SliderDisplay.addEventListener('scroll', (event) => {
-
-         if (SliderDisplay.scrollLeft - sliderWidth - (+GapSlides) > currentItem) {
-            currentItem = Math.round(SliderDisplay.scrollLeft / sliderWidth);
-         } else if (SliderDisplay.scrollLeft - sliderWidth - (+GapSlides) < currentItem) {
-            currentItem = Math.round(SliderDisplay.scrollLeft / sliderWidth);
-         }
-
-         if (Type == 'line') {
-            getLine(currentItem, index, numberOfSlides);
-         }
-         if (Type == 'dots') {
-            getDots(index, currentItem, slider);
-         }
-      });
-
-      slider[index].addEventListener("click", (event) => {
-         let target = event.target.closest('.button');
-         if (target) {
-            if (target.classList.contains('button--left')) {
-               SliderDisplay.scrollBy(-sliderWidth - GapSlides, 0);
-               if (currentItem != 0) {
-                  currentItem--;
-               } else {
-               }
-            }
-            if (target.classList.contains('button--right')) {
-               SliderDisplay.scrollBy((sliderWidth + (+GapSlides)), 0);
-               if (currentItem != (Math.ceil(sliderItems.length / Slides) - 1)) {
-                  currentItem++;
-               } else {
-               }
-            }
-         }
-         if (Type == 'line') {
-            getLine(currentItem, index, numberOfSlides);
-         } else if (Type == 'dots') {
-            getDots(index, currentItem, slider);
-         }
-
-      });
-
-      slider[index].addEventListener("mouseover", (event) => {
-         let target = event.target.closest('.button');
-         if (!target) return;
-         target.style['background-color'] = 'rgba(77, 77, 77, 0.785)';
-      });
-      slider[index].addEventListener("mouseout", (event) => {
-         let target = event.target.closest('.button');
-         if (!target) return;
-         target.style['background'] = 'darkgray';
-      });
    }
 }
