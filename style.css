@@ -22,23 +22,12 @@
 .slider._remove{
    display: none;
 }
-.slider__display {
-   width: 100%;
-   overflow: scroll;
-   scroll-behavior: smooth;
-   touch-action: none;
-   display: flex;
-   align-items: center;
-   height: 400px;
-   padding-top: 40px;
-   padding-bottom: 40px;
-}
 .slider__display::-webkit-scrollbar{
    display: none;
 }
 .slider__item{
    background: black;
-   height: 100%;
+   min-height: 100%;
    min-width: 100px;
    display: flex;
    align-items: center;
@@ -46,6 +35,10 @@
    color: white;
    font-size: 24px;
    font-family: sans-serif;
+   padding: 20px;
+}
+.content{
+   font-size: 30px;
 }
 .slider__item.col{
    background-color: darkslateblue;
