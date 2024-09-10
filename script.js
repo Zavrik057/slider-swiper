@@ -382,8 +382,17 @@ for (let index = 0; index < slider.length; index++) {
          clearTimeout(isScrolling);
 
          isScrolling = setTimeout(() => {
-
+            let scrollGap = SliderDisplay.scrollLeft - (sliderWidth + +GapSlides) * currentItem;
+            console.log(scrollGap);
+            if (scrollGap != 0){
+               if(scrollGap < 0){
+                  SliderDisplay.scrollBy(Math.abs(scrollGap), 0);
+               } else if(scrollGap > 0){
+                  SliderDisplay.scrollBy(-scrollGap,0);
+               }
+            }
          }, 300);
+
       });
 
       slider[index].addEventListener("click", (event) => {
